@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>简单路线 Demo</title>
+</head>
+<script charset="utf-8"
+        src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #mapContainer {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<body onload="init()">
+<div id="mapContainer"></div>
+</body>
+
+</html>
+<script>
+    function processData(data){
+        return data.map(it=>it.center).map(it=>new TMap.LatLng(it.lat,it.lng));
+    }
+
+    function initMap(data) {
+        //初始化地图
+        var map = new TMap.Map('mapContainer', {
+            center: data[0],//地图显示中心点
+            zoom: 16	//缩放级别
+        });
+
+        //创建 MultiPolyline
+        var polylineLayer = new TMap.MultiPolyline({
+            id: 'polyline-layer', //图层唯一标识
+            map: map,//绘制到目标地图
+            //折线样式定义
+            styles: {
+                'style_blue': new TMap.PolylineStyle({
+                    'color': '#3777FF', //线填充色
+                    'width': 6, //折线宽度
+                    'borderWidth': 5, //边线宽度
+                    'borderColor': '#FFF', //边线颜色
+                    'lineCap': 'butt' //线端头方式
+                })
+            },
+            //折线数据定义
+            geometries: [
+                {//第1条线
+                    'id': 'pl_1',//折线唯一标识，删除时使用
+                    'styleId': 'style_blue',//绑定样式名
+                    'paths': data
+                }
+            ]
+        });
+    }
+
+    function init() {
+        $.get("/root.json", (data) => initMap(processData(data)))
+    }
+</script>
