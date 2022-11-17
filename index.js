@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 require('express-async-errors')
 const {parseRawFile} = require("./lib/bus-routing");
+const {getRouters} = require("./lib/direction-driving-api");
 const app = express()
 const port = 3000
 
@@ -12,10 +13,11 @@ async function init() {
 }
 
 async function startExpress() {
+    app.use(express.json())
     app.use(express.static('public'));
 
-    app.get('/api/start', async (req, res) => {
-        res.send("HW")
+    app.post('/api/route', async (req, res) => {
+        res.json(await getRouters(req.body))
     })
 
     app.listen(port, () => {
@@ -24,3 +26,4 @@ async function startExpress() {
 }
 
 init().then(startExpress)
+// startExpress();

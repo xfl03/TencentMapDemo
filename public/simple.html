@@ -14,8 +14,8 @@
     html,
     body {
         height: 100%;
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
     }
 
     #mapContainer {
@@ -30,19 +30,23 @@
 
 </html>
 <script>
-    function processData(data){
-        return data.map(it=>it.center).map(it=>new TMap.LatLng(it.lat,it.lng));
+    function processData(data) {
+        let points = data.map(it => it.center).map(it => new TMap.LatLng(it.lat, it.lng));
+        if (points.length > 0) {
+            points.push(points[0]);
+        }
+        return points;
     }
 
     function initMap(data) {
         //初始化地图
-        var map = new TMap.Map('mapContainer', {
+        const map = new TMap.Map('mapContainer', {
             center: data[0],//地图显示中心点
             zoom: 16	//缩放级别
         });
 
         //创建 MultiPolyline
-        var polylineLayer = new TMap.MultiPolyline({
+        new TMap.MultiPolyline({
             id: 'polyline-layer', //图层唯一标识
             map: map,//绘制到目标地图
             //折线样式定义
