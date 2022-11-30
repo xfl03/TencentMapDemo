@@ -4,7 +4,7 @@ require('express-async-errors')
 const {parseRawFile} = require("./lib/bus-routing");
 const {getRouters} = require("./lib/direction-driving-api");
 const app = express()
-const port = 3000
+const port = 3030
 
 async function init() {
     if (process.argv.length > 2) {
